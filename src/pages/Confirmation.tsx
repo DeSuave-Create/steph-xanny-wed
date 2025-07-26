@@ -8,6 +8,7 @@ interface ConfirmationData {
   guestName: string;
   guestCount: string;
   foodChoices: string[];
+  guestNames: string[];
 }
 
 const Confirmation = () => {
@@ -19,7 +20,7 @@ const Confirmation = () => {
     return <Navigate to="/" replace />;
   }
 
-  const { guestName, guestCount, foodChoices } = confirmationData;
+  const { guestName, guestCount, foodChoices, guestNames } = confirmationData;
 
   const downloadConfirmation = async () => {
     const element = document.getElementById('confirmation-content');
@@ -104,7 +105,7 @@ const Confirmation = () => {
                     {foodChoices.map((choice, index) => (
                       <div key={index} className="text-center">
                         <div className="font-sans text-wedding-brown text-xs uppercase tracking-wide">
-                          Guest {index + 1}
+                          {guestNames && guestNames[index] ? guestNames[index] : `Guest ${index + 1}`}
                         </div>
                         <div className="font-serif text-wedding-brown">
                           {choice}
