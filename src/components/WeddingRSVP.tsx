@@ -316,7 +316,7 @@ const WeddingRSVP = () => {
                                 value={formData.foodChoices[index] || ""}
                               >
                                 <SelectTrigger className="border-wedding-peach focus:ring-wedding-coral">
-                                  <SelectValue placeholder="Please pick 1 from the entree & sides" />
+                                  <SelectValue placeholder="Please pick 1 from the entree" />
                                 </SelectTrigger>
                                 <SelectContent>
                                   <SelectItem value="Chicken Tandoori">Chicken Tandoori (sizzling platter)</SelectItem>
