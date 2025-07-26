@@ -2,6 +2,7 @@ import { useLocation, Navigate } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import botanicalDecoration from "@/assets/botanical-decoration.png";
+import html2canvas from "html2canvas";
 
 interface ConfirmationData {
   guestName: string;
@@ -20,6 +21,22 @@ const Confirmation = () => {
 
   const { guestName, guestCount, foodChoices } = confirmationData;
 
+  const downloadConfirmation = async () => {
+    const element = document.getElementById('confirmation-content');
+    if (element) {
+      const canvas = await html2canvas(element, {
+        backgroundColor: '#ffffff',
+        scale: 2,
+        useCORS: true
+      });
+      
+      const link = document.createElement('a');
+      link.download = `wedding-rsvp-confirmation-${guestName.replace(/\s+/g, '-').toLowerCase()}.png`;
+      link.href = canvas.toDataURL();
+      link.click();
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background relative overflow-hidden">
       {/* Botanical Background Decorations */}
@@ -30,7 +47,7 @@ const Confirmation = () => {
         <img src={botanicalDecoration} alt="" className="w-full h-full object-contain" />
       </div>
 
-      <div className="container mx-auto px-4 py-8 relative z-10">
+      <div className="container mx-auto px-4 py-8 relative z-10" id="confirmation-content">
         <div className="max-w-2xl mx-auto">
           {/* Header */}
           <div className="text-center mb-12">
@@ -140,13 +157,13 @@ const Confirmation = () => {
                 </div>
               </div>
 
-              {/* Back to Home Button */}
+              {/* Download Confirmation Button */}
               <div className="text-center pt-6">
                 <Button
-                  onClick={() => window.location.href = '/'}
+                  onClick={downloadConfirmation}
                   className="bg-wedding-coral hover:bg-wedding-peach text-wedding-brown font-sans px-8 py-3 rounded-lg transition-colors"
                 >
-                  Back to Home
+                  Download Confirmation
                 </Button>
               </div>
             </div>
