@@ -156,18 +156,20 @@ const Confirmation = () => {
                   Stephanie & Xandrix
                 </div>
               </div>
-
-              {/* Download Confirmation Button */}
-              <div className="text-center pt-6">
-                <Button
-                  onClick={downloadConfirmation}
-                  className="bg-wedding-coral hover:bg-wedding-peach text-wedding-brown font-sans px-8 py-3 rounded-lg transition-colors"
-                >
-                  Download Confirmation
-                </Button>
-              </div>
             </div>
           </Card>
+        </div>
+      </div>
+
+      {/* Download Confirmation Button - Outside capture area */}
+      <div className="container mx-auto px-4 pb-8 relative z-10">
+        <div className="max-w-2xl mx-auto text-center">
+          <Button
+            onClick={downloadConfirmation}
+            className="bg-wedding-coral hover:bg-wedding-peach text-wedding-brown font-sans px-8 py-3 rounded-lg transition-colors"
+          >
+            Download Confirmation
+          </Button>
         </div>
       </div>
     </div>
