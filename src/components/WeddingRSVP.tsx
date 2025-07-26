@@ -56,11 +56,6 @@ const WeddingRSVP = () => {
         EMAILJS_PUBLIC_KEY
       );
 
-      toast({
-        title: "RSVP Submitted Successfully! 🎉",
-        description: "Thank you for responding to Stephanie & Xandrix's wedding invitation. We've received your RSVP!",
-      });
-
       // Navigate to confirmation page with form data
       navigate('/confirmation', {
         state: {
