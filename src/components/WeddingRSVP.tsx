@@ -67,7 +67,8 @@ const WeddingRSVP = () => {
         state: {
           guestName: formData.guestName,
           guestCount: formData.guestCount,
-          foodChoices: formData.foodChoices
+          foodChoices: formData.foodChoices,
+          guestNames: formData.guestNames
         }
       });
 
@@ -111,6 +112,18 @@ const WeddingRSVP = () => {
           newData.foodChoices = currentChoices;
           newData.guestNames = currentNames;
         }
+        
+        // Auto-fill first guest with primary guest name if available
+        if (newGuestCount > 0 && prev.guestName && !newData.guestNames[0]) {
+          newData.guestNames[0] = prev.guestName;
+        }
+      }
+      
+      // If primary guest name changes, update first guest name too
+      if (field === "guestName" && parseInt(prev.guestCount) > 0) {
+        const updatedNames = [...prev.guestNames];
+        updatedNames[0] = value;
+        newData.guestNames = updatedNames;
       }
       
       return newData;
