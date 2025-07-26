@@ -36,7 +36,11 @@ const WeddingRSVP = () => {
     try {
       // Prepare email template parameters
       const foodChoicesText = formData.attendance === "yes" && formData.foodChoices.length > 0 
-        ? formData.foodChoices.map((choice, index) => `Guest ${index + 1}: ${choice}`).join('\n')
+        ? formData.foodChoices.map((choice, index) => `${formData.guestNames[index] || `Guest ${index + 1}`}: ${choice}`).join('\n')
+        : "N/A";
+      
+      const guestNamesText = formData.attendance === "yes" && formData.guestNames.length > 0
+        ? formData.guestNames.filter(name => name.trim()).join(', ')
         : "N/A";
       
       const templateParams = {
@@ -44,6 +48,7 @@ const WeddingRSVP = () => {
         guest_email: formData.email,
         attendance: formData.attendance,
         guest_count: formData.attendance === "yes" ? formData.guestCount : "N/A",
+        guest_names: guestNamesText,
         food_choices: foodChoicesText,
         submission_date: new Date().toLocaleDateString(),
         submission_time: new Date().toLocaleTimeString()
