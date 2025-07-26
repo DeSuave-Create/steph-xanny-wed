@@ -21,7 +21,8 @@ const WeddingRSVP = () => {
     email: "",
     attendance: "",
     guestCount: "",
-    foodChoices: [] as string[]
+    foodChoices: [] as string[],
+    guestNames: [] as string[]
   });
   
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -71,7 +72,8 @@ const WeddingRSVP = () => {
         email: "",
         attendance: "",
         guestCount: "",
-        foodChoices: []
+        foodChoices: [],
+        guestNames: []
       });
 
     } catch (error) {
@@ -90,16 +92,19 @@ const WeddingRSVP = () => {
     setFormData(prev => {
       const newData = { ...prev, [field]: value };
       
-      // If guest count changes, adjust food choices array
+      // If guest count changes, adjust food choices and guest names arrays
       if (field === "guestCount") {
         const newGuestCount = parseInt(value) || 0;
         const currentChoices = [...prev.foodChoices];
+        const currentNames = [...prev.guestNames];
         
-        // Trim array if guest count decreased
+        // Trim arrays if guest count decreased
         if (newGuestCount < currentChoices.length) {
           newData.foodChoices = currentChoices.slice(0, newGuestCount);
+          newData.guestNames = currentNames.slice(0, newGuestCount);
         } else {
           newData.foodChoices = currentChoices;
+          newData.guestNames = currentNames;
         }
       }
       
@@ -112,6 +117,14 @@ const WeddingRSVP = () => {
       const newChoices = [...prev.foodChoices];
       newChoices[guestIndex] = choice;
       return { ...prev, foodChoices: newChoices };
+    });
+  };
+
+  const updateGuestName = (guestIndex: number, name: string) => {
+    setFormData(prev => {
+      const newNames = [...prev.guestNames];
+      newNames[guestIndex] = name;
+      return { ...prev, guestNames: newNames };
     });
   };
 
@@ -237,7 +250,7 @@ const WeddingRSVP = () => {
                   {/* How Many Guests */}
                   <div className="space-y-2">
                     <Label htmlFor="guestCount" className="font-sans text-wedding-brown">
-                      How many guests? *
+                      Number of total guests in the party (including yourself) *
                     </Label>
                     <Input
                       id="guestCount"
@@ -247,7 +260,7 @@ const WeddingRSVP = () => {
                       value={formData.guestCount}
                       onChange={(e) => updateField("guestCount", e.target.value)}
                       className="border-wedding-peach focus:ring-wedding-coral"
-                      placeholder="Number of guests"
+                      placeholder="Total number of guests in your party"
                       required
                     />
                   </div>
@@ -266,32 +279,59 @@ const WeddingRSVP = () => {
                         Oct 17, 2025 at 1:00 PM
                       </div>
                     </div>
-                    
-                    <Label className="font-sans text-wedding-brown">Food Choices (one per guest) *</Label>
-                    
-                    {Array.from({ length: guestCount }, (_, index) => (
-                      <div key={index} className="space-y-2 p-4 border border-wedding-peach rounded-lg bg-card/50">
-                        <Label className="font-sans text-wedding-brown text-sm">
-                          Guest {index + 1} Food Choice
-                        </Label>
-                        <Select 
-                          onValueChange={(value) => updateFoodChoice(index, value)}
-                          value={formData.foodChoices[index] || ""}
-                        >
-                          <SelectTrigger className="border-wedding-peach focus:ring-wedding-coral">
-                            <SelectValue placeholder="Please pick 1 from the entree & sides" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="Chicken Tandoori with Basmati Rice">Chicken Tandoori with Basmati Rice</SelectItem>
-                            <SelectItem value="Salmon Tandoori with Basmati Rice">Salmon Tandoori with Basmati Rice</SelectItem>
-                            <SelectItem value="Chicken Tika Masala with Basmati Rice">Chicken Tika Masala with Basmati Rice</SelectItem>
-                            <SelectItem value="Salmon Tika Masala with Basmati Rice">Salmon Tika Masala with Basmati Rice</SelectItem>
-                            <SelectItem value="Veggie Tandoori with Basmati Rice">Veggie Tandoori with Basmati Rice</SelectItem>
-                            <SelectItem value="Veggie Curry with Basmati Rice">Veggie Curry with Basmati Rice</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    ))}
+
+                    {guestCount > 0 && (
+                      <>
+                        <Label className="font-sans text-wedding-brown">Food Choices (one per guest) *</Label>
+                        <div className="text-center mb-4">
+                          <p className="font-sans text-sm text-wedding-brown italic">
+                            Please list the full name of each guest and select one entrée. All meals include basmati rice.
+                          </p>
+                        </div>
+                        
+                        {Array.from({ length: guestCount }, (_, index) => (
+                          <div key={index} className="space-y-3 p-4 border border-wedding-peach rounded-lg bg-card/50">
+                            <Label className="font-sans text-wedding-brown text-sm font-medium">
+                              Guest {index + 1}
+                            </Label>
+                            
+                            <div className="space-y-2">
+                              <Label className="font-sans text-wedding-brown text-xs">
+                                Name
+                              </Label>
+                              <Input
+                                value={formData.guestNames[index] || ""}
+                                onChange={(e) => updateGuestName(index, e.target.value)}
+                                className="border-wedding-peach focus:ring-wedding-coral"
+                                placeholder="Guest name"
+                              />
+                            </div>
+                            
+                            <div className="space-y-2">
+                              <Label className="font-sans text-wedding-brown text-xs">
+                                Food Choice
+                              </Label>
+                              <Select 
+                                onValueChange={(value) => updateFoodChoice(index, value)}
+                                value={formData.foodChoices[index] || ""}
+                              >
+                                <SelectTrigger className="border-wedding-peach focus:ring-wedding-coral">
+                                  <SelectValue placeholder="Please pick 1 from the entree & sides" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="Chicken Tandoori">Chicken Tandoori (sizzling platter)</SelectItem>
+                                  <SelectItem value="Salmon Tandoori">Salmon Tandoori (sizzling platter)</SelectItem>
+                                  <SelectItem value="Veggie Tandoori">Veggie Tandoori (sizzling platter)</SelectItem>
+                                  <SelectItem value="Chicken Tika Masala">Chicken Tika Masala</SelectItem>
+                                  <SelectItem value="Salmon Tika Masala">Salmon Tika Masala</SelectItem>
+                                  <SelectItem value="Veggie Tika Masala">Veggie Tika Masala</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </div>
+                          </div>
+                        ))}
+                      </>
+                    )}
                   </div>
 
                   <div className="text-center mt-4">
@@ -299,7 +339,7 @@ const WeddingRSVP = () => {
                       APPETIZER
                     </div>
                     <div className="font-sans text-sm text-wedding-brown mb-4">
-                      Chicken and Veggie Momo<br />
+                      Chicken and Veggie Momo (steamed dumpling)<br />
                       Garlic Basil Naan
                     </div>
                     
@@ -307,7 +347,8 @@ const WeddingRSVP = () => {
                       DRINK
                     </div>
                     <div className="font-sans text-sm text-wedding-brown">
-                      Mango Lassi
+                      Mango Lassi<br />
+                      Fountain drinks
                     </div>
                   </div>
                 </>
